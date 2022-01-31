@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">WJShare</string>
+    <string name="login_txt">로그인</string>
+    <string name="logout_txt">로그아웃</string>
+
+    <string name="main_bottom_navi_search_txt">Search</string>
+    <string name="main_bottom_navi_profile_txt">Profile</string>
+    <string name="main_header_title">GitHub</string>
+
+    <string name="fragment_search_header_hint">검색할 레파지토리를 입력해주세요</string>
+
+    <string name="fragment_login_title">로그인이 필요합니다.</string>
 </resources>
