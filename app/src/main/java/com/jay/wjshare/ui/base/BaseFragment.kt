@@ -15,7 +15,6 @@ abstract class BaseFragment<VDB : ViewDataBinding, VM : ViewModel>(
     private val layoutResId: Int
 ) : Fragment() {
 
-    //protected val activityViewModel by activityViewModels<>()
     protected abstract val viewModel: VM
     protected lateinit var binding: VDB
 

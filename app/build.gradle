@@ -19,9 +19,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "CLIENT_ID", "\"26a3d7d17e7acfe55ba2\""
+            buildConfigField "String", "CLIENT_KEY", "\"41276193c5ea2afb69a59cf3bae3b39b5773dc1e\""
+            buildConfigField "String", "AUTH_BASE_URL", "\"https://github.com/login/oauth/\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "CLIENT_ID", "\"26a3d7d17e7acfe55ba2\""
+            buildConfigField "String", "CLIENT_KEY", "\"41276193c5ea2afb69a59cf3bae3b39b5773dc1e\""
+            buildConfigField "String", "AUTH_BASE_URL", "\"https://github.com/login/oauth/\""
         }
     }
     compileOptions {

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jay.wjshare">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ui.application.WJApplication"
         android:allowBackup="false"
@@ -12,12 +14,25 @@
         android:theme="@style/Theme.WJShare">
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="github-auth"
+                    android:scheme="wjstyleshare" />
+            </intent-filter>
+
         </activity>
     </application>
 
