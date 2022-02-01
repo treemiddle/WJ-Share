@@ -26,6 +26,10 @@ android {
             buildConfigField "String", "CLIENT_ID", "\"26a3d7d17e7acfe55ba2\""
             buildConfigField "String", "CLIENT_KEY", "\"41276193c5ea2afb69a59cf3bae3b39b5773dc1e\""
             buildConfigField "String", "AUTH_BASE_URL", "\"https://github.com/login/oauth/\""
+            buildConfigField "String", "ACCEPT", "\"Accept\""
+            buildConfigField "String", "AUTHORIZATION", "\"Authorization\""
+            buildConfigField "String", "ACCEPT_VALUE", "\"application/json\""
+            buildConfigField "String", "GITHUB_BASE_URL", "\"https://api.github.com/search/\""
         }
         release {
             minifyEnabled false
@@ -34,6 +38,10 @@ android {
             buildConfigField "String", "CLIENT_ID", "\"26a3d7d17e7acfe55ba2\""
             buildConfigField "String", "CLIENT_KEY", "\"41276193c5ea2afb69a59cf3bae3b39b5773dc1e\""
             buildConfigField "String", "AUTH_BASE_URL", "\"https://github.com/login/oauth/\""
+            buildConfigField "String", "ACCEPT", "\"Accept\""
+            buildConfigField "String", "AUTHORIZATION", "\"Authorization\""
+            buildConfigField "String", "ACCEPT_VALUE", "\"application/json\""
+            buildConfigField "String", "GITHUB_BASE_URL", "\"https://api.github.com/search/\""
         }
     }
     compileOptions {

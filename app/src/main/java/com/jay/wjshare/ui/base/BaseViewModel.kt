@@ -10,7 +10,7 @@ abstract class BaseViewModel : ViewModel() {
     protected val compositeDisposable by lazy(::CompositeDisposable)
 
     private val _isLoading = MutableLiveData(false)
-    private val isLoading: LiveData<Boolean>
+    val isLoading: LiveData<Boolean>
         get() = _isLoading
 
     protected fun showLoading() {

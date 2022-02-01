@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.jay.wjshare.BuildConfig
+import com.jay.wjshare.data.RemoteToLocalBridge
+import com.jay.wjshare.data.remote.interceptor.WJInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,18 +15,40 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class AuthRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GitHubRetrofit
+
+    @AuthRetrofit
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideAuthRetrofit(bridge: RemoteToLocalBridge): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.AUTH_BASE_URL)
-            .client(provideOkHttp())
+            .client(provideOkHttp(bridge))
+            .addCallAdapterFactory(provideRxAdapter())
+            .addConverterFactory(GsonConverterFactory.create(provideGson()))
+            .build()
+    }
+
+    @GitHubRetrofit
+    @Provides
+    @Singleton
+    fun provideGitHubRetrofit(bridge: RemoteToLocalBridge): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GITHUB_BASE_URL)
+            .client(provideOkHttp(bridge))
             .addCallAdapterFactory(provideRxAdapter())
             .addConverterFactory(GsonConverterFactory.create(provideGson()))
             .build()
@@ -39,8 +63,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        return GsonBuilder().setLenient()
-            .create()
+        return GsonBuilder().setLenient().create()
     }
 
     @Provides
@@ -57,10 +80,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttp(): OkHttpClient {
+    fun provideOkHttp(bridge: RemoteToLocalBridge): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(provideOkHttpLogging())
+            .addInterceptor(provideInterceptor(bridge))
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideInterceptor(bridge: RemoteToLocalBridge): WJInterceptor {
+        return WJInterceptor(bridge)
     }
 
 }
