@@ -4,4 +4,6 @@ interface PrefsHelper {
 
     var accessToken: String
 
+    fun clear()
+
 }

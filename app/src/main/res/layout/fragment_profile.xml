@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="com.jay.wjshare.ui.main.profile.ProfileViewModel" />
@@ -30,8 +32,10 @@
 
         <ImageView
             android:id="@+id/iv_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            setMyInfoProfile="@{vm.myInfo.profile}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="10dp"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@id/gl_horizontal"
             app:layout_constraintEnd_toEndOf="@id/gl_vertical"
@@ -41,8 +45,11 @@
 
         <TextView
             android:id="@+id/tv_name"
+            setMyInfoUserName="@{vm.myInfo.userName}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="@id/iv_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
@@ -52,9 +59,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_user_repo"
+            setRepositories="@{vm.myRepos}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,6 +71,15 @@
             app:layout_constraintTop_toBottomOf="@id/gl_horizontal"
             tools:itemCount="5"
             tools:listitem="@layout/item_repo" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{vm.isLoading ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

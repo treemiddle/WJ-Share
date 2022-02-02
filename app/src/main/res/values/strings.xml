@@ -2,6 +2,7 @@
     <string name="app_name">WJShare</string>
     <string name="login_txt">로그인</string>
     <string name="logout_txt">로그아웃</string>
+    <string name="empty_user_name">이름없음</string>
 
     <string name="main_bottom_navi_search_txt">Search</string>
     <string name="main_bottom_navi_profile_txt">Profile</string>

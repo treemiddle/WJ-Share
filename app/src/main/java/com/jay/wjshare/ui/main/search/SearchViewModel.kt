@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.jay.wjshare.domain.repository.GitHubRepository
 import com.jay.wjshare.ui.base.BaseViewModel
-import com.jay.wjshare.ui.main.search.mapper.SearchMapper
-import com.jay.wjshare.ui.main.search.model.RepoModel
+import com.jay.wjshare.ui.mapper.Mapper
+import com.jay.wjshare.ui.model.RepoModel
 import com.jay.wjshare.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
@@ -45,7 +45,7 @@ class SearchViewModel @Inject constructor(
                         .subscribeOn(Schedulers.io())
                 }
                 .observeOn(Schedulers.computation())
-                .map { it.map(SearchMapper::mapToPresentation) }
+                .map { it.map(Mapper::mapToPresentation) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { hideLoading() }
                 .onErrorReturn { listOf() }
@@ -59,7 +59,7 @@ class SearchViewModel @Inject constructor(
             page = page
         )
             .observeOn(Schedulers.computation())
-            .map { it.map(SearchMapper::mapToPresentation) }
+            .map { it.map(Mapper::mapToPresentation) }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }

@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+
         intent?.data?.getQueryParameter("code")?.let {
             Toast.makeText(this@MainActivity, "code를 얻었습니다.", Toast.LENGTH_SHORT).show()
             with(viewModel) {

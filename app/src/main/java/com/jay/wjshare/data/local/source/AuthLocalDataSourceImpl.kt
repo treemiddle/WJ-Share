@@ -13,4 +13,6 @@ class AuthLocalDataSourceImpl @Inject constructor(
             prefs.accessToken = value
         }
 
+    override fun clear() = prefs.clear()
+
 }

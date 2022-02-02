@@ -1,16 +1,16 @@
-package com.jay.wjshare.data.mapper
+package com.jay.wjshare.ui.mapper
 
-import com.jay.wjshare.data.model.MyInfoModel
-import com.jay.wjshare.data.model.MyRepositoryModel
-import com.jay.wjshare.data.model.RepositoriesModel
 import com.jay.wjshare.domain.model.DomainGithubModel
 import com.jay.wjshare.domain.model.DomainMyInfoModel
 import com.jay.wjshare.domain.model.DomainMyRepoModel
+import com.jay.wjshare.ui.model.RepoModel
+import com.jay.wjshare.ui.mapper.PresentationMapper
+import com.jay.wjshare.ui.model.MyInfoModel
 
-object GitHubDataMapper : DataMapper<RepositoriesModel, DomainGithubModel> {
+object Mapper : PresentationMapper<DomainGithubModel, RepoModel> {
 
-    override fun mapToDomain(from: RepositoriesModel): DomainGithubModel {
-        return DomainGithubModel(
+    override fun mapToPresentation(from: DomainGithubModel): RepoModel {
+        return RepoModel(
             onwerName = from.onwerName,
             repositoryName = from.repositoryName,
             description = from.description,
@@ -20,9 +20,9 @@ object GitHubDataMapper : DataMapper<RepositoriesModel, DomainGithubModel> {
 
 }
 
-fun List<MyRepositoryModel>.mapToDomain(): List<DomainMyRepoModel> {
+fun List<DomainMyRepoModel>.mapToPresentation(): List<RepoModel> {
     return this.map {
-        DomainMyRepoModel(
+        RepoModel(
             onwerName = it.onwerName,
             repositoryName = it.repositoryName,
             description = it.description,
@@ -31,8 +31,8 @@ fun List<MyRepositoryModel>.mapToDomain(): List<DomainMyRepoModel> {
     }
 }
 
-fun MyInfoModel.mapToDomain(): DomainMyInfoModel {
-    return DomainMyInfoModel(
+fun DomainMyInfoModel.mapToPresentation(): MyInfoModel {
+    return MyInfoModel(
         userName = this.userName,
         profile = this.profile
     )

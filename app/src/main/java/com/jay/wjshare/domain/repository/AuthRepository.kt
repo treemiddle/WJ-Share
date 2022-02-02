@@ -8,4 +8,6 @@ interface AuthRepository {
 
     fun requestAccessToken(code: String): Single<String>
 
+    fun clear()
+
 }

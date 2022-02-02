@@ -29,7 +29,7 @@ android {
             buildConfigField "String", "ACCEPT", "\"Accept\""
             buildConfigField "String", "AUTHORIZATION", "\"Authorization\""
             buildConfigField "String", "ACCEPT_VALUE", "\"application/json\""
-            buildConfigField "String", "GITHUB_BASE_URL", "\"https://api.github.com/search/\""
+            buildConfigField "String", "GITHUB_BASE_URL", "\"https://api.github.com/\""
         }
         release {
             minifyEnabled false
@@ -41,7 +41,7 @@ android {
             buildConfigField "String", "ACCEPT", "\"Accept\""
             buildConfigField "String", "AUTHORIZATION", "\"Authorization\""
             buildConfigField "String", "ACCEPT_VALUE", "\"application/json\""
-            buildConfigField "String", "GITHUB_BASE_URL", "\"https://api.github.com/search/\""
+            buildConfigField "String", "GITHUB_BASE_URL", "\"https://api.github.com/\""
         }
     }
     compileOptions {

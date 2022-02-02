@@ -1,4 +1,4 @@
-package com.jay.wjshare.ui.main.search.model
+package com.jay.wjshare.ui.model
 
 import com.jay.wjshare.ui.model.PresentationModel
 

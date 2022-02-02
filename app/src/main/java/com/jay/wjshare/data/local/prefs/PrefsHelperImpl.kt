@@ -17,6 +17,12 @@ class PrefsHelperImpl @Inject constructor(applicationContext: Context) : PrefsHe
             }
         }
 
+    override fun clear() = prefs.edit {
+        remove(ACCESS_TOKEN)
+            .apply()
+    }
+
+
     companion object {
         const val FILE_NAME = "wj_style_share"
 

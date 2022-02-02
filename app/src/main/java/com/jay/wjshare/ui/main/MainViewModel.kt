@@ -39,6 +39,7 @@ class MainViewModel @Inject constructor(
         true -> {
             setLoginState(false)
             setCode(null)
+            clearToken()
         }
         else -> requestLogin()
     }
@@ -85,5 +86,7 @@ class MainViewModel @Inject constructor(
                 .build()
         )
     }
+
+    private fun clearToken() = authRepository.clear()
 
 }

@@ -22,4 +22,6 @@ class AuthRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun clear() = authLocalDataSource.clear()
+
 }

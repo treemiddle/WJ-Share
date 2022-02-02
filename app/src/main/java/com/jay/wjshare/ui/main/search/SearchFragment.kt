@@ -5,20 +5,24 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.jay.wjshare.R
 import com.jay.wjshare.databinding.FragmentSearchBinding
+import com.jay.wjshare.di.Search
 import com.jay.wjshare.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment :
     BaseFragment<FragmentSearchBinding, SearchViewModel>(R.layout.fragment_search) {
 
     override val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: SearchRepoAdapter
+    @Inject
+    @Search
+    lateinit var adapter: SearchRepoAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initAdapter()
+        binding.rvSearchRepo.adapter = adapter
     }
 
     override fun setupBinding() {
@@ -27,11 +31,6 @@ class SearchFragment :
 
     override fun setupObserving() {
 
-    }
-
-    private fun initAdapter() = with(binding) {
-        adapter = SearchRepoAdapter()
-        rvSearchRepo.adapter = adapter
     }
 
     companion object {

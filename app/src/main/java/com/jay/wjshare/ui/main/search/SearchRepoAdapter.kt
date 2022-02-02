@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.jay.wjshare.databinding.ItemRepoBinding
 import com.jay.wjshare.ui.base.BaseListAdapter
 import com.jay.wjshare.ui.base.BaseViewHolder
-import com.jay.wjshare.ui.main.search.model.RepoModel
+import com.jay.wjshare.ui.model.RepoModel
 
 class SearchRepoAdapter : BaseListAdapter<RepoModel>() {
 

@@ -4,4 +4,6 @@ interface AuthLocalDataSource {
 
     var accessToken: String
 
+    fun clear()
+
 }

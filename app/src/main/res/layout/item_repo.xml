@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.jay.wjshare.ui.main.search.model.RepoModel" />
+            type="com.jay.wjshare.ui.model.RepoModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
