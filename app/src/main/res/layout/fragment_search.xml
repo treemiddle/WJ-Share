@@ -26,6 +26,7 @@
 
             <EditText
                 android:id="@+id/et_query"
+                setQueryListener="@{vm}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_search_header_hint"
@@ -50,10 +51,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search_repo"
+            onLoadMore="@{(page) -> vm.onLoadMore(``, page)}"
+            setRepositories="@{vm.repositories}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            setRepositories="@{vm.repositories}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
