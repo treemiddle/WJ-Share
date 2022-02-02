@@ -3,8 +3,8 @@ package com.jay.wjshare.data.remote.mapper
 import com.jay.wjshare.data.model.MyInfoModel
 import com.jay.wjshare.data.model.MyRepositoryModel
 import com.jay.wjshare.data.model.RepositoriesModel
-import com.jay.wjshare.data.remote.model.profile.MyInfoResponse
 import com.jay.wjshare.data.remote.model.profile.ProfileResponseItem
+import com.jay.wjshare.data.remote.model.profile.MyInfoResponse
 import com.jay.wjshare.data.remote.model.repositories.Item
 
 object GitHubMapper : RemoteMapper<Item, RepositoriesModel> {

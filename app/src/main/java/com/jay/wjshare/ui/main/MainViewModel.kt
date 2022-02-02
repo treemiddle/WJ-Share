@@ -73,7 +73,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getLoginState() = _loginState.value
-
+    //"repo,user"
     private fun requestLogin() {
         _loginUrl.value = Event(
             Uri.Builder()
@@ -83,6 +83,7 @@ class MainViewModel @Inject constructor(
                 .appendPath("oauth")
                 .appendPath("authorize")
                 .appendQueryParameter("client_id", BuildConfig.CLIENT_ID)
+                .appendQueryParameter("scope", "repo,user")
                 .build()
         )
     }

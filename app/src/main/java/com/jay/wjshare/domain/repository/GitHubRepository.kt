@@ -11,6 +11,6 @@ interface GitHubRepository {
 
     fun getMyRepositories(userName: String): Single<List<DomainMyRepoModel>>
 
-    fun getMyInfo(userName: String): Single<DomainMyInfoModel>
+    fun getMyInfo(): Single<DomainMyInfoModel>
 
 }

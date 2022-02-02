@@ -11,6 +11,6 @@ interface GithubRemoteDataSource {
 
     fun getMyRepositories(userName: String): Single<List<MyRepositoryModel>>
 
-    fun getMyInfo(userName: String): Single<MyInfoModel>
+    fun getMyInfo(): Single<MyInfoModel>
 
 }

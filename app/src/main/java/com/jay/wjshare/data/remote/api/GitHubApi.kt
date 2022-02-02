@@ -1,7 +1,7 @@
 package com.jay.wjshare.data.remote.api
 
-import com.jay.wjshare.data.remote.model.profile.MyInfoResponse
 import com.jay.wjshare.data.remote.model.profile.ProfileResponseItem
+import com.jay.wjshare.data.remote.model.profile.MyInfoResponse
 import com.jay.wjshare.data.remote.model.repositories.RepositoriesResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -21,9 +21,7 @@ interface GitHubApi {
         @Path("username") username: String
     ): Single<List<ProfileResponseItem>>
 
-    @GET("users/{username}")
-    fun getMyInfo(
-        @Path("username") username: String
-    ): Single<MyInfoResponse>
+    @GET("user")
+    fun getMyInfo(): Single<MyInfoResponse>
 
 }

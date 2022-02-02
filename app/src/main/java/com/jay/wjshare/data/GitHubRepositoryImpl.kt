@@ -24,8 +24,8 @@ class GitHubRepositoryImpl @Inject constructor(
             .map { it.mapToDomain()}
     }
 
-    override fun getMyInfo(userName: String): Single<DomainMyInfoModel> {
-        return githubRemoteDataSource.getMyInfo(userName)
+    override fun getMyInfo(): Single<DomainMyInfoModel> {
+        return githubRemoteDataSource.getMyInfo()
             .map { it.mapToDomain() }
     }
 

@@ -11,7 +11,7 @@ class WJInterceptor @Inject constructor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = bridge.accessToken
+        val token = "token ${bridge.accessToken}"
         val request = chain.request().newBuilder()
 
         if (token.isEmpty()) {

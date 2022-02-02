@@ -20,9 +20,5 @@ fun bindMyInfoProfile(iv: ImageView, path: String?) {
 
 @BindingAdapter("setMyInfoUserName")
 fun bindMyInfoUserName(tv: TextView, name: String?) {
-    if (name.isNullOrEmpty()) {
-        tv.text = tv.context.getString(R.string.empty_user_name)
-    } else {
-        tv.text = name
-    }
+    name?.let { tv.text = it }
 }

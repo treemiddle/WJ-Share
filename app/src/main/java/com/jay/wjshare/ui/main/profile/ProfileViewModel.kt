@@ -28,10 +28,11 @@ class ProfileViewModel @Inject constructor(
     val myInfo: LiveData<MyInfoModel>
         get() = _myInfo
 
+    //todo 여기 usernaem 어떻게 넣을 까 고민 중
     init {
         Single.zip(
             getMyInfo(),
-            getMyRepositories(),
+            getMyRepositories("wj1227"),
             { t1: MyInfoModel, t2: List<RepoModel> -> t1 to t2 }
         )
             .observeOn(AndroidSchedulers.mainThread())
@@ -54,13 +55,13 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getMyInfo(): Single<MyInfoModel> {
-        return gitHubRepository.getMyInfo("wj1227")
+        return gitHubRepository.getMyInfo()
             .observeOn(Schedulers.computation())
             .map { it.mapToPresentation() }
     }
 
-    private fun getMyRepositories(): Single<List<RepoModel>> {
-        return gitHubRepository.getMyRepositories("wj1227")
+    private fun getMyRepositories(userName: String): Single<List<RepoModel>> {
+        return gitHubRepository.getMyRepositories(userName)
             .observeOn(Schedulers.computation())
             .map { it.mapToPresentation() }
     }

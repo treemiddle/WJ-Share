@@ -23,8 +23,8 @@ class GitHubRemoteDataSourceImpl @Inject constructor(
             .map { it.mapToData() }
     }
 
-    override fun getMyInfo(userName: String): Single<MyInfoModel> {
-        return gitHubApi.getMyInfo(userName)
+    override fun getMyInfo(): Single<MyInfoModel> {
+        return gitHubApi.getMyInfo()
             .map { it.mapToData() }
     }
 
