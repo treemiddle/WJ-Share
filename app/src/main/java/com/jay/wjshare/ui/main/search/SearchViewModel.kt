@@ -6,6 +6,7 @@ import com.jay.wjshare.domain.repository.AuthRepository
 import com.jay.wjshare.domain.repository.GitHubRepository
 import com.jay.wjshare.ui.base.BaseViewModel
 import com.jay.wjshare.ui.mapper.Mapper
+import com.jay.wjshare.ui.mapper.applyClick
 import com.jay.wjshare.ui.model.RepoModel
 import com.jay.wjshare.utils.Event
 import com.jay.wjshare.utils.makeLog
@@ -51,21 +52,33 @@ class SearchViewModel @Inject constructor(
                     gitHubRepository.getRepositories(name, 1)
                 }
                 .observeOn(Schedulers.computation())
-                .map { it.map(Mapper::mapToPresentation) }
+                .map {
+                    it.map(Mapper::mapToPresentation).map { repo ->
+                        repo.applyClick(repoClick)
+                    }
+                }
                 .onErrorReturn { listOf() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { hideLoading() }
-                .subscribe { repos -> setRepositorys(repos) }
+                .subscribe { repos -> setRepositorys(repos) },
+
+            repoClick.subscribe { saveRepository(it) },
+
+            sharedRepo.subscribe { setRepositorys(uploadRepository(it, getRepositorys())) }
         )
     }
 
-    fun onLoadMore(query: String, page: Int) {
+    fun onLoadMore(page: Int) {
         gitHubRepository.getRepositories(
             query = querySubject.value!!,
             page = page
         )
             .observeOn(Schedulers.computation())
-            .map { it.map(Mapper::mapToPresentation) }
+            .map {
+                it.map(Mapper::mapToPresentation).map { repo ->
+                    repo.applyClick(repoClick)
+                }
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
@@ -98,9 +111,11 @@ class SearchViewModel @Inject constructor(
         _repositories.value = list
     }
 
+    private fun getRepositorys() = _repositories.value
+
     private fun setPagingRepositories(list: List<RepoModel>) {
         val newList = mutableListOf<RepoModel>().apply {
-            addAll(repositories.value!!)
+            addAll(getRepositorys()!!)
             addAll(list)
         }
 

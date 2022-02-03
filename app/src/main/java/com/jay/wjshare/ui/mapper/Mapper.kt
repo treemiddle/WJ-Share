@@ -3,9 +3,9 @@ package com.jay.wjshare.ui.mapper
 import com.jay.wjshare.domain.model.DomainGithubModel
 import com.jay.wjshare.domain.model.DomainMyInfoModel
 import com.jay.wjshare.domain.model.DomainMyRepoModel
-import com.jay.wjshare.ui.model.RepoModel
-import com.jay.wjshare.ui.mapper.PresentationMapper
 import com.jay.wjshare.ui.model.MyInfoModel
+import com.jay.wjshare.ui.model.RepoModel
+import io.reactivex.subjects.Subject
 
 object Mapper : PresentationMapper<DomainGithubModel, RepoModel> {
 
@@ -20,7 +20,9 @@ object Mapper : PresentationMapper<DomainGithubModel, RepoModel> {
 
 }
 
-fun Pair<DomainMyInfoModel, List<DomainMyRepoModel>>.mapToPresentation(): Pair<MyInfoModel, List<RepoModel>> {
+fun Pair<DomainMyInfoModel, List<DomainMyRepoModel>>.mapToPresentation(
+    subject: Subject<RepoModel>
+) : Pair<MyInfoModel, List<RepoModel>> {
     val myInfoModel = MyInfoModel(
         userName = first.userName,
         profile = first.profile
@@ -32,8 +34,16 @@ fun Pair<DomainMyInfoModel, List<DomainMyRepoModel>>.mapToPresentation(): Pair<M
             repositoryName = it.repositoryName,
             description = it.description,
             starCount = it.starCount
-        )
+        ).apply {
+            onClick = subject
+        }
     }
 
     return myInfoModel to repos
+}
+
+fun RepoModel.applyClick(subject: Subject<RepoModel>): RepoModel {
+    return this.apply {
+        onClick = subject
+    }
 }

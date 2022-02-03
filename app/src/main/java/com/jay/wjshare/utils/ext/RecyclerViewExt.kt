@@ -8,6 +8,8 @@ import com.jay.wjshare.utils.EndlessRecyclerViewScrollListener
 
 @BindingAdapter("setRepositories")
 fun <T> RecyclerView.bindRepositories(repos: List<T>?) {
+    itemAnimator = null
+
     if (this.adapter is BaseListAdapter<*>) {
         val adapter = this.adapter as BaseListAdapter<T>
         adapter.submitList(repos)

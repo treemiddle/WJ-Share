@@ -9,11 +9,9 @@ import com.jay.wjshare.ui.model.MyInfoModel
 import com.jay.wjshare.ui.model.RepoModel
 import com.jay.wjshare.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import okhttp3.internal.addHeaderLenient
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,12 +29,21 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getMyInfo()
+        bindRx()
+    }
+
+    private fun bindRx() {
+        compositeDisposable.addAll(
+            repoClick.subscribe { saveRepository(it) },
+
+            sharedRepo.subscribe { setMyRepositories(uploadRepository(it, getMyRepositories())) }
+        )
     }
 
     private fun getMyInfo() {
         gitHubRepository.getMyInfo()
             .observeOn(Schedulers.computation())
-            .map { it.mapToPresentation() }
+            .map { it.mapToPresentation(repoClick) }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
@@ -51,6 +58,8 @@ class ProfileViewModel @Inject constructor(
     private fun setMyRepositories(list: List<RepoModel>) {
         _myRepos.value = list
     }
+
+    private fun getMyRepositories() = _myRepos.value
 
     private fun setMyInfo(info: MyInfoModel) {
         _myInfo.value = info
