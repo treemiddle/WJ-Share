@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    gitHubRepository: GitHubRepository
+    private val gitHubRepository: GitHubRepository
 ) : BaseViewModel() {
 
     private val _myRepos = MutableLiveData<List<RepoModel>>()
@@ -30,6 +30,10 @@ class ProfileViewModel @Inject constructor(
         get() = _myInfo
 
     init {
+        getMyInfo()
+    }
+
+    private fun getMyInfo() {
         gitHubRepository.getMyInfo()
             .observeOn(Schedulers.computation())
             .map { it.mapToPresentation() }

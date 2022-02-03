@@ -6,6 +6,8 @@ import com.jay.wjshare.R
 import com.jay.wjshare.databinding.FragmentLoginBinding
 import com.jay.wjshare.ui.base.BaseFragment
 import com.jay.wjshare.ui.main.MainViewModel
+import com.jay.wjshare.utils.ScreenType
+import com.jay.wjshare.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

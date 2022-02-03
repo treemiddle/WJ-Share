@@ -2,10 +2,12 @@ package com.jay.wjshare.ui.main.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.jay.wjshare.domain.repository.AuthRepository
 import com.jay.wjshare.domain.repository.GitHubRepository
 import com.jay.wjshare.ui.base.BaseViewModel
 import com.jay.wjshare.ui.mapper.Mapper
 import com.jay.wjshare.ui.model.RepoModel
+import com.jay.wjshare.utils.Event
 import com.jay.wjshare.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val gitHubRepository: GitHubRepository
+    private val gitHubRepository: GitHubRepository,
+    private val authRepository: AuthRepository
 ) : BaseViewModel() {
 
     private val searchClickSubject = PublishSubject.create<Unit>()
@@ -28,6 +31,10 @@ class SearchViewModel @Inject constructor(
     private val _repositories = MutableLiveData<List<RepoModel>>()
     val repositories: LiveData<List<RepoModel>>
         get() = _repositories
+
+    private val _searchState = MutableLiveData<Event<MessageSet>>()
+    val searchState: LiveData<Event<MessageSet>>
+        get() = _searchState
 
     init {
         val button = searchClickSubject.throttleFirst(1, TimeUnit.SECONDS)
@@ -42,13 +49,12 @@ class SearchViewModel @Inject constructor(
                 .doOnNext { showLoading() }
                 .switchMapSingle { name ->
                     gitHubRepository.getRepositories(name, 1)
-                        .subscribeOn(Schedulers.io())
                 }
                 .observeOn(Schedulers.computation())
                 .map { it.map(Mapper::mapToPresentation) }
+                .onErrorReturn { listOf() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { hideLoading() }
-                .onErrorReturn { listOf() }
                 .subscribe { repos -> setRepositorys(repos) }
         )
     }
@@ -72,9 +78,21 @@ class SearchViewModel @Inject constructor(
             }).addTo(compositeDisposable)
     }
 
-    fun debounceQuery(query: String) = querySubject.onNext(query)
+    fun debounceQuery(query: String) {
+        if (getAccessToken()) {
+            setMessageState(MessageSet.EMPTY_TOKEN)
+        } else {
+            querySubject.onNext(query)
+        }
+    }
 
-    fun onSearchClick() = searchClickSubject.onNext(Unit)
+    fun onSearchClick() {
+        if (getAccessToken()) {
+            setMessageState(MessageSet.EMPTY_TOKEN)
+        } else {
+            searchClickSubject.onNext(Unit)
+        }
+    }
 
     private fun setRepositorys(list: List<RepoModel>) {
         _repositories.value = list
@@ -87,6 +105,16 @@ class SearchViewModel @Inject constructor(
         }
 
         setRepositorys(newList)
+    }
+
+    private fun getAccessToken() = authRepository.accessToken.isEmpty()
+
+    private fun setMessageState(state: MessageSet) {
+        _searchState.value = Event(state)
+    }
+
+    enum class MessageSet {
+        EMPTY_TOKEN
     }
 
 }

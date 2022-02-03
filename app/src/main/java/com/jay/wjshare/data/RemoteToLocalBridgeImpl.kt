@@ -1,4 +1,4 @@
-package com.jay.wjshare
+package com.jay.wjshare.data
 
 import com.jay.wjshare.data.RemoteToLocalBridge
 import com.jay.wjshare.data.local.source.AuthLocalDataSource

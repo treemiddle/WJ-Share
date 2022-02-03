@@ -3,6 +3,8 @@
     <string name="login_txt">로그인</string>
     <string name="logout_txt">로그아웃</string>
     <string name="empty_user_name">이름없음</string>
+    <string name="need_login_txt">로그인 필요</string>
+    <string name="check">확인</string>
 
     <string name="main_bottom_navi_search_txt">Search</string>
     <string name="main_bottom_navi_profile_txt">Profile</string>
