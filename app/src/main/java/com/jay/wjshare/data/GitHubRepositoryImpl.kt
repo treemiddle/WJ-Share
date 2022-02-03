@@ -19,14 +19,18 @@ class GitHubRepositoryImpl @Inject constructor(
             .map { it.map(GitHubDataMapper::mapToDomain) }
     }
 
-    override fun getMyRepositories(userName: String): Single<List<DomainMyRepoModel>> {
-        return githubRemoteDataSource.getMyRepositories(userName)
-            .map { it.mapToDomain()}
-    }
-
-    override fun getMyInfo(): Single<DomainMyInfoModel> {
+    override fun getMyInfo(): Single<Pair<DomainMyInfoModel, List<DomainMyRepoModel>>> {
         return githubRemoteDataSource.getMyInfo()
             .map { it.mapToDomain() }
+            .flatMap { getMyRepositories(it) }
+    }
+
+    private fun getMyRepositories(
+        model: DomainMyInfoModel
+    ): Single<Pair<DomainMyInfoModel, List<DomainMyRepoModel>>> {
+        return githubRemoteDataSource.getMyRepositories(model.userName)
+            .map { it.mapToDomain() }
+            .map { list -> model to list }
     }
 
 }

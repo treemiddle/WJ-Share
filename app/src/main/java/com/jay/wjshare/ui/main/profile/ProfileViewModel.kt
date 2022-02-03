@@ -13,11 +13,12 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import okhttp3.internal.addHeaderLenient
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val gitHubRepository: GitHubRepository
+    gitHubRepository: GitHubRepository
 ) : BaseViewModel() {
 
     private val _myRepos = MutableLiveData<List<RepoModel>>()
@@ -28,21 +29,18 @@ class ProfileViewModel @Inject constructor(
     val myInfo: LiveData<MyInfoModel>
         get() = _myInfo
 
-    //todo 여기 usernaem 어떻게 넣을 까 고민 중
     init {
-        Single.zip(
-            getMyInfo(),
-            getMyRepositories("wj1227"),
-            { t1: MyInfoModel, t2: List<RepoModel> -> t1 to t2 }
-        )
+        gitHubRepository.getMyInfo()
+            .observeOn(Schedulers.computation())
+            .map { it.mapToPresentation() }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
-            .subscribe({
-                setMyInfo(it.first)
-                setMyRepositories(it.second)
-            }, {
-                makeLog(javaClass.simpleName, "error: ${it.localizedMessage}")
+            .subscribe({ (model, repos) ->
+                setMyInfo(model)
+                setMyRepositories(repos)
+            }, { t ->
+                makeLog(javaClass.simpleName, "info error: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 
@@ -52,18 +50,6 @@ class ProfileViewModel @Inject constructor(
 
     private fun setMyInfo(info: MyInfoModel) {
         _myInfo.value = info
-    }
-
-    private fun getMyInfo(): Single<MyInfoModel> {
-        return gitHubRepository.getMyInfo()
-            .observeOn(Schedulers.computation())
-            .map { it.mapToPresentation() }
-    }
-
-    private fun getMyRepositories(userName: String): Single<List<RepoModel>> {
-        return gitHubRepository.getMyRepositories(userName)
-            .observeOn(Schedulers.computation())
-            .map { it.mapToPresentation() }
     }
 
 }

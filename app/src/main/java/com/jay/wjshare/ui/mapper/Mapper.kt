@@ -20,8 +20,13 @@ object Mapper : PresentationMapper<DomainGithubModel, RepoModel> {
 
 }
 
-fun List<DomainMyRepoModel>.mapToPresentation(): List<RepoModel> {
-    return this.map {
+fun Pair<DomainMyInfoModel, List<DomainMyRepoModel>>.mapToPresentation(): Pair<MyInfoModel, List<RepoModel>> {
+    val myInfoModel = MyInfoModel(
+        userName = first.userName,
+        profile = first.profile
+    )
+
+    val repos = second.map {
         RepoModel(
             onwerName = it.onwerName,
             repositoryName = it.repositoryName,
@@ -29,11 +34,6 @@ fun List<DomainMyRepoModel>.mapToPresentation(): List<RepoModel> {
             starCount = it.starCount
         )
     }
-}
 
-fun DomainMyInfoModel.mapToPresentation(): MyInfoModel {
-    return MyInfoModel(
-        userName = this.userName,
-        profile = this.profile
-    )
+    return myInfoModel to repos
 }
