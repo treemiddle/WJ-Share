@@ -31,7 +31,6 @@ class MainNavigatorImpl @Inject constructor(
         }
     }
 
-    //todo 여기 수정ㅇㅇㅇ
     private fun replaceFragment(screen: ScreenType) {
         fragmentActivity.supportFragmentManager.commit {
             when (screen) {

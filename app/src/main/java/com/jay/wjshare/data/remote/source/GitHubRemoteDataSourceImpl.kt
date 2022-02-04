@@ -15,7 +15,7 @@ class GitHubRemoteDataSourceImpl @Inject constructor(
 
     override fun getRepositories(query: String, page: Int): Single<List<RepositoriesModel>> {
         return gitHubApi.getRepositories(query, page)
-            .map { it.items.map(GitHubMapper::mapToData) }
+            .map { it.items?.map(GitHubMapper::mapToData) }
     }
 
     override fun getMyRepositories(userName: String): Single<List<MyRepositoryModel>> {

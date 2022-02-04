@@ -20,9 +20,9 @@
 
         <TextView
             android:id="@+id/tv_title"
+            setLoginTitleState="@{avm.loginState}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            setLoginTitleState="@{avm.loginState}"
             android:textSize="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

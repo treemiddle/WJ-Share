@@ -22,10 +22,10 @@ class PrefsHelperImpl @Inject constructor(applicationContext: Context) : PrefsHe
             .apply()
     }
 
-
     companion object {
         const val FILE_NAME = "wj_style_share"
 
         private const val ACCESS_TOKEN = "access_token"
     }
+
 }
