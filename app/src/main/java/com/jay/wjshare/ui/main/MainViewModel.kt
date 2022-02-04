@@ -5,8 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.jay.wjshare.domain.repository.AuthRepository
 import com.jay.wjshare.ui.base.BaseViewModel
+import com.jay.wjshare.ui.model.RepoModel
 import com.jay.wjshare.utils.Event
-import com.jay.wjshare.utils.ScreenType
+import com.jay.wjshare.utils.enums.ScreenType
 import com.jay.wjshare.utils.getUri
 import com.jay.wjshare.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +32,11 @@ class MainViewModel @Inject constructor(
     val loginUrl: LiveData<Event<Uri>>
         get() = _loginUrl
 
+    private val sharedRepoFromSearch = mutableListOf<RepoModel>()
+    private val sharedRepoFromProfile = mutableListOf<RepoModel>()
+
     init {
-        // 테스트를 위해 들어올 때 마다 토큰 삭제
+        // 테스트 위함 토큰 지우기
         authRepository.clear()
     }
 
@@ -60,6 +64,21 @@ class MainViewModel @Inject constructor(
                 makeLog(javaClass.simpleName, "error: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
     }
+
+    fun setSharedRepositoryFromSearch(repoModel: RepoModel) {
+        val repo = sharedRepoFromSearch.find { it.id == repoModel.id }
+
+        if (repo == null) {
+            sharedRepoFromSearch.add(repoModel)
+        } else {
+            val index = sharedRepoFromSearch.indexOf(repoModel.copy(hasLiked = repoModel.hasLiked.not()))
+            if (index != -1) {
+                sharedRepoFromSearch.removeAt(index)
+            }
+        }
+    }
+
+    fun getSharedRepositoryFromSearch() = sharedRepoFromSearch
 
     private fun getBottomNaviType() = _bottomNaviType.value
 

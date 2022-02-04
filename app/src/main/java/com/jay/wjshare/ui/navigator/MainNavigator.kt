@@ -1,6 +1,6 @@
 package com.jay.wjshare.ui.navigator
 
-import com.jay.wjshare.utils.ScreenType
+import com.jay.wjshare.utils.enums.ScreenType
 
 interface MainNavigator {
 

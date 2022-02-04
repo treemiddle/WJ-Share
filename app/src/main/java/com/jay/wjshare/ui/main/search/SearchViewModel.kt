@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import com.jay.wjshare.domain.repository.AuthRepository
 import com.jay.wjshare.domain.repository.GitHubRepository
 import com.jay.wjshare.ui.base.BaseViewModel
+import com.jay.wjshare.ui.main.LikeRepository
 import com.jay.wjshare.ui.mapper.Mapper
 import com.jay.wjshare.ui.mapper.applyClick
 import com.jay.wjshare.ui.model.RepoModel
 import com.jay.wjshare.utils.Event
+import com.jay.wjshare.utils.enums.MessageSet
 import com.jay.wjshare.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
@@ -24,8 +26,9 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val gitHubRepository: GitHubRepository,
     private val authRepository: AuthRepository
-) : BaseViewModel() {
+) : BaseViewModel(), LikeRepository {
 
+    override val copyRepoSubject: BehaviorSubject<RepoModel> = BehaviorSubject.create()
     private val searchClickSubject = PublishSubject.create<Unit>()
     private val querySubject = BehaviorSubject.createDefault("")
 
@@ -36,6 +39,10 @@ class SearchViewModel @Inject constructor(
     private val _searchState = MutableLiveData<Event<MessageSet>>()
     val searchState: LiveData<Event<MessageSet>>
         get() = _searchState
+
+    private val _hasLikedRepo = MutableLiveData<RepoModel>()
+    val hasLikedRepo: LiveData<RepoModel>
+        get() = _hasLikedRepo
 
     init {
         val button = searchClickSubject.throttleFirst(1, TimeUnit.SECONDS)
@@ -54,7 +61,7 @@ class SearchViewModel @Inject constructor(
                 .observeOn(Schedulers.computation())
                 .map {
                     it.map(Mapper::mapToPresentation).map { repo ->
-                        repo.applyClick(repoClick)
+                        repo.applyClick(repoClickSubject)
                     }
                 }
                 .onErrorReturn { listOf() }
@@ -62,10 +69,54 @@ class SearchViewModel @Inject constructor(
                 .doOnNext { hideLoading() }
                 .subscribe { repos -> setRepositorys(repos) },
 
-            repoClick.subscribe { saveRepository(it) },
+            repoClickSubject.subscribe { setRepositorys(newSubmitList(it, getRepositorys())) },
 
-            sharedRepo.subscribe { setRepositorys(uploadRepository(it, getRepositorys())) }
+            copyRepoSubject.subscribe { updateRepository(it.applyClick(repoClickSubject)) }
         )
+    }
+
+    override fun copyRepository(repo: RepoModel) =
+        repo.copy(hasLiked = repo.hasLiked.not()).applyClick(repoClickSubject)
+
+    override fun getCurrentRepositoryIndex(repo: RepoModel, list: List<RepoModel>) =
+        list.indexOf(repo)
+
+    override fun newSubmitList(repo: RepoModel, oldList: List<RepoModel>?): List<RepoModel> {
+        val newList = mutableListOf<RepoModel>().apply {
+            addAll(oldList!!)
+        }
+        val newRepo = copyRepository(repo)
+        val index = getCurrentRepositoryIndex(repo, newList)
+        newList[index] = newRepo
+        setHasLikedRepository(newRepo)
+
+        return newList
+    }
+
+    override fun copyRepoOnNext(newRepo: RepoModel) = copyRepoSubject.onNext(newRepo)
+
+    override fun findRepository(newRepo: RepoModel, list: List<RepoModel>?): Boolean {
+        list?.let {
+            val repoModel = it.find { repo -> repo.id == newRepo.id }
+
+            return repoModel != null
+
+        } ?: return false
+    }
+
+    override fun updateRepository(newRepo: RepoModel) {
+        if (findRepository(newRepo, getRepositorys())) {
+            getRepositorys()?.let {
+                val newList = mutableListOf<RepoModel>().apply { addAll(it) }
+                val index = getCurrentRepositoryIndex(newRepo.copy(hasLiked = newRepo.hasLiked.not()), newList)
+
+                if (index != -1) {
+                    newList[index] = newRepo
+                    setRepositorys(newList)
+                }
+
+            } ?: return
+        }
     }
 
     fun onLoadMore(page: Int) {
@@ -76,7 +127,7 @@ class SearchViewModel @Inject constructor(
             .observeOn(Schedulers.computation())
             .map {
                 it.map(Mapper::mapToPresentation).map { repo ->
-                    repo.applyClick(repoClick)
+                    repo.applyClick(repoClickSubject)
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
@@ -128,8 +179,8 @@ class SearchViewModel @Inject constructor(
         _searchState.value = Event(state)
     }
 
-    enum class MessageSet {
-        EMPTY_TOKEN
+    private fun setHasLikedRepository(repo: RepoModel) {
+        _hasLikedRepo.value = repo
     }
 
 }

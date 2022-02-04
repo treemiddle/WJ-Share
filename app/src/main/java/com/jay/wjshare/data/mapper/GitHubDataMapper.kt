@@ -11,6 +11,7 @@ object GitHubDataMapper : DataMapper<RepositoriesModel, DomainGithubModel> {
 
     override fun mapToDomain(from: RepositoriesModel): DomainGithubModel {
         return DomainGithubModel(
+            id = from.id,
             onwerName = from.onwerName,
             repositoryName = from.repositoryName,
             description = from.description,
@@ -23,6 +24,7 @@ object GitHubDataMapper : DataMapper<RepositoriesModel, DomainGithubModel> {
 fun List<MyRepositoryModel>.mapToDomain(): List<DomainMyRepoModel> {
     return this.map {
         DomainMyRepoModel(
+            id = it.id,
             onwerName = it.onwerName,
             repositoryName = it.repositoryName,
             description = it.description,

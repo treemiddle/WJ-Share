@@ -9,7 +9,7 @@ import com.jay.wjshare.R
 import com.jay.wjshare.databinding.ActivityMainBinding
 import com.jay.wjshare.ui.navigator.MainNavigator
 import com.jay.wjshare.utils.EventObserver
-import com.jay.wjshare.utils.ScreenType
+import com.jay.wjshare.utils.enums.ScreenType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

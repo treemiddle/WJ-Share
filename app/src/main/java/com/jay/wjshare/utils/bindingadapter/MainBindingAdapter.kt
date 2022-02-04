@@ -5,7 +5,16 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jay.wjshare.R
 import com.jay.wjshare.ui.main.MainViewModel
-import com.jay.wjshare.utils.ScreenType
+import com.jay.wjshare.utils.enums.ScreenType
+
+@BindingAdapter("setLoginTitleState")
+fun bindLoginTitleState(tv: TextView, state: Boolean) {
+    tv.text = if (state) {
+        tv.context.getString(R.string.fragment_logout_title)
+    } else {
+        tv.context.getString(R.string.fragment_login_title)
+    }
+}
 
 @BindingAdapter("setLoginState")
 fun bindLoginState(tv: TextView, state: Boolean) {

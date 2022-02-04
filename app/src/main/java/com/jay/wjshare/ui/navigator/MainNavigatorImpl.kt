@@ -6,7 +6,10 @@ import com.jay.wjshare.R
 import com.jay.wjshare.ui.main.login.LoginFragment
 import com.jay.wjshare.ui.main.profile.ProfileFragment
 import com.jay.wjshare.ui.main.search.SearchFragment
-import com.jay.wjshare.utils.ScreenType
+import com.jay.wjshare.utils.TAG_LOGIN
+import com.jay.wjshare.utils.TAG_PROFILE
+import com.jay.wjshare.utils.TAG_SEARCH
+import com.jay.wjshare.utils.enums.ScreenType
 import javax.inject.Inject
 
 class MainNavigatorImpl @Inject constructor(
@@ -23,7 +26,7 @@ class MainNavigatorImpl @Inject constructor(
 
     private fun initFragment() {
         fragmentActivity.supportFragmentManager.commit {
-            add(R.id.fl_container, searchFragment, "search")
+            add(R.id.fl_container, searchFragment, TAG_SEARCH)
             show(searchFragment)
         }
     }
@@ -42,10 +45,10 @@ class MainNavigatorImpl @Inject constructor(
                     }
                 }
                 ScreenType.PROFILE -> {
-                    val profile = fragmentActivity.supportFragmentManager.findFragmentByTag("profile")
+                    val profile = fragmentActivity.supportFragmentManager.findFragmentByTag(TAG_PROFILE)
 
                     if (profile == null) {
-                        add(R.id.fl_container, profileFragment, "profile")
+                        add(R.id.fl_container, profileFragment, TAG_PROFILE)
                     }
 
                     try {
@@ -57,10 +60,10 @@ class MainNavigatorImpl @Inject constructor(
                     }
                 }
                 ScreenType.LOGIN -> {
-                    val login = fragmentActivity.supportFragmentManager.findFragmentByTag("login")
+                    val login = fragmentActivity.supportFragmentManager.findFragmentByTag(TAG_LOGIN)
 
                     if (login == null) {
-                        add(R.id.fl_container, loginFragment, "login")
+                        add(R.id.fl_container, loginFragment, TAG_LOGIN)
                     }
 
                     try {

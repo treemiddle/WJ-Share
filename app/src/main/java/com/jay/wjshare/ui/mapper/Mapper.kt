@@ -11,6 +11,7 @@ object Mapper : PresentationMapper<DomainGithubModel, RepoModel> {
 
     override fun mapToPresentation(from: DomainGithubModel): RepoModel {
         return RepoModel(
+            id = from.id,
             onwerName = from.onwerName,
             repositoryName = from.repositoryName,
             description = from.description,
@@ -30,6 +31,7 @@ fun Pair<DomainMyInfoModel, List<DomainMyRepoModel>>.mapToPresentation(
 
     val repos = second.map {
         RepoModel(
+            id = it.id,
             onwerName = it.onwerName,
             repositoryName = it.repositoryName,
             description = it.description,

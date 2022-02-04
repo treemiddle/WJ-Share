@@ -1,6 +1,6 @@
 package com.jay.wjshare.di
 
-import com.jay.wjshare.ui.main.search.SearchRepoAdapter
+import com.jay.wjshare.ui.main.RepositoryAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,15 +21,15 @@ object ActivityModule {
     @Provides
     @Singleton
     @Search
-    fun provideSearchAdapter(): SearchRepoAdapter {
-        return SearchRepoAdapter()
+    fun provideSearchAdapter(): RepositoryAdapter {
+        return RepositoryAdapter()
     }
 
     @Provides
     @Singleton
     @Profile
-    fun provideProfileAdapter(): SearchRepoAdapter {
-        return SearchRepoAdapter()
+    fun provideProfileAdapter(): RepositoryAdapter {
+        return RepositoryAdapter()
     }
 
 }

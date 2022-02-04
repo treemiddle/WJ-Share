@@ -11,6 +11,7 @@ object GitHubMapper : RemoteMapper<Item, RepositoriesModel> {
 
     override fun mapToData(from: Item): RepositoriesModel {
         return RepositoriesModel(
+            id = from.id,
             onwerName = from.owner.login,
             repositoryName = from.name,
             description = from.description,
@@ -23,6 +24,7 @@ object GitHubMapper : RemoteMapper<Item, RepositoriesModel> {
 fun List<ProfileResponseItem>.mapToData(): List<MyRepositoryModel> {
     return this.map {
         MyRepositoryModel(
+            id = it.id,
             onwerName = it.owner.login,
             repositoryName = it.name,
             description = it.description,

@@ -1,4 +1,4 @@
-package com.jay.wjshare.ui.main.search
+package com.jay.wjshare.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import com.jay.wjshare.ui.base.BaseViewHolder
 import com.jay.wjshare.ui.base.WJClickable
 import com.jay.wjshare.ui.model.RepoModel
 
-class SearchRepoAdapter : BaseListAdapter<RepoModel>() {
+class RepositoryAdapter : BaseListAdapter<RepoModel>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<RepoModel> {
         return SearchHolder.create(parent).also {
