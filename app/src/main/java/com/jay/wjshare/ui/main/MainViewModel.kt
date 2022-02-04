@@ -32,8 +32,7 @@ class MainViewModel @Inject constructor(
     val loginUrl: LiveData<Event<Uri>>
         get() = _loginUrl
 
-    private val sharedRepoFromSearch = mutableListOf<RepoModel>()
-    private val sharedRepoFromProfile = mutableListOf<RepoModel>()
+    private val sharedRepoList = mutableListOf<RepoModel>()
 
     init {
         // 테스트 위함 토큰 지우기
@@ -66,19 +65,19 @@ class MainViewModel @Inject constructor(
     }
 
     fun setSharedRepositoryFromSearch(repoModel: RepoModel) {
-        val repo = sharedRepoFromSearch.find { it.id == repoModel.id }
+        val repo = sharedRepoList.find { it.id == repoModel.id }
 
         if (repo == null) {
-            sharedRepoFromSearch.add(repoModel)
+            sharedRepoList.add(repoModel)
         } else {
-            val index = sharedRepoFromSearch.indexOf(repoModel.copy(hasLiked = repoModel.hasLiked.not()))
+            val index = sharedRepoList.indexOf(repoModel.copy(hasLiked = repoModel.hasLiked.not()))
             if (index != -1) {
-                sharedRepoFromSearch.removeAt(index)
+                sharedRepoList.removeAt(index)
             }
         }
     }
 
-    fun getSharedRepositoryFromSearch() = sharedRepoFromSearch
+    fun getSharedRepositoryFromSearch() = sharedRepoList
 
     private fun getBottomNaviType() = _bottomNaviType.value
 

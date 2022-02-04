@@ -83,6 +83,10 @@ class SearchFragment :
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
+
+        if (!hidden && activityViewModel.getSharedRepositoryFromSearch().size != 0) {
+            viewModel.setSharedList(activityViewModel.getSharedRepositoryFromSearch())
+        }
     }
 
     companion object {

@@ -37,6 +37,10 @@ class ProfileViewModel @Inject constructor(
     val hasLikedRepo: LiveData<RepoModel>
         get() = _hasLikedRepo
 
+    private val _sharedList = MutableLiveData<List<RepoModel>>()
+    val sharedList: LiveData<List<RepoModel>>
+        get() = _sharedList
+
     init {
         getMyInfo()
         bindRx()
@@ -86,8 +90,14 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun setSharedRepos(sharedList: List<RepoModel>) {
-        val sameList = sharedList.filter { repo ->
+    fun initFirstSharedRepo(list: List<RepoModel>) {
+        _sharedList.value = list
+    }
+
+    fun setSharedRepos(list: List<RepoModel>) {
+        _sharedList.value = list
+
+        val sameList = list.filter { repo ->
             repo.id in getMyRepositories()!!.map { oldRepo ->
                 oldRepo.id
             }
@@ -120,7 +130,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun setMyRepositories(list: List<RepoModel>) {
-        _myRepos.value = list
+        val newList = mutableListOf<RepoModel>().apply { addAll(list) }
+
+        _sharedList.value?.let {
+            for (i in it.indices) {
+                val model = newList.find { n -> n.id == _sharedList.value!![i].id }
+
+                model?.let { m ->
+                    val index = getCurrentRepositoryIndex(m, newList)
+                    if (index != -1) {
+                        newList[index] = _sharedList.value!![i]
+                    }
+                }
+            }
+        }
+
+        _myRepos.value = newList
     }
 
     private fun getMyRepositories() = _myRepos.value

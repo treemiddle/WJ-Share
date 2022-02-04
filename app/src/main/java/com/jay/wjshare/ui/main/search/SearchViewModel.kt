@@ -44,6 +44,10 @@ class SearchViewModel @Inject constructor(
     val hasLikedRepo: LiveData<RepoModel>
         get() = _hasLikedRepo
 
+    private val _sharedList = MutableLiveData<List<RepoModel>>()
+    val sharedList: LiveData<List<RepoModel>>
+        get() = _sharedList
+
     init {
         val button = searchClickSubject.throttleFirst(1, TimeUnit.SECONDS)
             .map { querySubject.value }
@@ -87,7 +91,10 @@ class SearchViewModel @Inject constructor(
         }
         val newRepo = copyRepository(repo)
         val index = getCurrentRepositoryIndex(repo, newList)
-        newList[index] = newRepo
+        if (index != -1) {
+            newList[index] = newRepo
+        }
+
         setHasLikedRepository(newRepo)
 
         return newList
@@ -109,7 +116,6 @@ class SearchViewModel @Inject constructor(
             getRepositorys()?.let {
                 val newList = mutableListOf<RepoModel>().apply { addAll(it) }
                 val index = getCurrentRepositoryIndex(newRepo.copy(hasLiked = newRepo.hasLiked.not()), newList)
-
                 if (index != -1) {
                     newList[index] = newRepo
                     setRepositorys(newList)
@@ -158,8 +164,27 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun setSharedList(list: List<RepoModel>) {
+        _sharedList.value = list
+    }
+
     private fun setRepositorys(list: List<RepoModel>) {
-        _repositories.value = list
+        val newList = mutableListOf<RepoModel>().apply { addAll(list) }
+
+        _sharedList.value?.let {
+            for (i in it.indices) {
+                val model = newList.find { n -> n.id == _sharedList.value!![i].id }
+
+                model?.let { m ->
+                    val index = getCurrentRepositoryIndex(m, newList)
+                    if (index != -1) {
+                        newList[index] = _sharedList.value!![i]
+                    }
+                }
+            }
+        }
+
+        _repositories.value = newList
     }
 
     private fun getRepositorys() = _repositories.value

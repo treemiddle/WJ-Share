@@ -63,12 +63,14 @@ class ProfileFragment
 
     override fun setupObserving() {
         viewModel.hasLikedRepo.observe(viewLifecycleOwner, { repo ->
+            activityViewModel.setSharedRepositoryFromSearch(repo)
             val intent = Intent().apply {
                 action = ACTION_TO_SEARCH
                 putExtra(REPO_MODEL, repo)
             }
             context?.sendBroadcast(intent)
         })
+        viewModel.initFirstSharedRepo(activityViewModel.getSharedRepositoryFromSearch())
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
