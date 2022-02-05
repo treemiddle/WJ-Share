@@ -34,6 +34,7 @@ class SearchViewModel @Inject constructor(
     override val copyRepositorySubect: BehaviorSubject<RepoModel> = BehaviorSubject.create()
     private val searchClickSubject = PublishSubject.create<Unit>()
     private val querySubject = BehaviorSubject.createDefault("")
+    private val pageSubject = BehaviorSubject.create<Int>()
 
     private val _repositories = MutableLiveData<List<RepoModel>>()
     override val repositories: LiveData<List<RepoModel>>
@@ -74,7 +75,10 @@ class SearchViewModel @Inject constructor(
                 .onErrorReturn { listOf() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { hideLoading() }
-                .subscribe { repos -> setRepositories(repos) },
+                .subscribe { repos ->
+                    setRepositories(repos)
+                    pageOnNext(1)
+                },
 
             repoClickSubject.subscribe { repo ->
                 applyRepositoryToList(
@@ -98,7 +102,6 @@ class SearchViewModel @Inject constructor(
     }
 
 
-
     override fun setHasLikedRepository(repo: RepoModel) {
         _hasLikedRepo.value = repo
     }
@@ -119,10 +122,12 @@ class SearchViewModel @Inject constructor(
 
     override fun copyRepositoryOnNext(repo: RepoModel) = copyRepositorySubect.onNext(repo)
 
-    fun onLoadMore(page: Int) {
+    fun onLoadMore() {
+        pageOnNext(getPage() + 1)
+
         gitHubRepository.getRepositories(
             query = querySubject.value!!,
-            page = page
+            page = getPage()
         )
             .observeOn(Schedulers.computation())
             .map {
@@ -181,5 +186,9 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getRepositories(): List<RepoModel> = _repositories.value ?: emptyList()
+
+    private fun pageOnNext(page: Int) = pageSubject.onNext(page)
+
+    private fun getPage() = pageSubject.value!!
 
 }
