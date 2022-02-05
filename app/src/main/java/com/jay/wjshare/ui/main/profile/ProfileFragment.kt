@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.jay.wjshare.R
@@ -37,7 +36,7 @@ class ProfileFragment
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val copyRepo = intent?.extras?.getParcelable<RepoModel>(REPO_MODEL)
-            copyRepo?.let { viewModel.copyRepoOnNext(it) }
+            copyRepo?.let { viewModel.copyRepositoryOnNext(it) }
         }
     }
 
@@ -67,7 +66,6 @@ class ProfileFragment
             })
 
             setSharedList(activityViewModel.getSharedRepositories())
-            //initFirstSharedRepo(activityViewModel.getSharedRepositories())
         }
     }
 

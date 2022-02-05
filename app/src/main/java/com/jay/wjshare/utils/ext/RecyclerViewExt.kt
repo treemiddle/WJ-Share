@@ -12,7 +12,7 @@ fun <T> RecyclerView.bindRepositories(repos: List<T>?) {
 
     if (this.adapter is BaseListAdapter<*>) {
         val adapter = this.adapter as BaseListAdapter<T>
-        adapter.submitList(repos)
+        repos?.let { adapter.submitList(it) }
     }
 }
 

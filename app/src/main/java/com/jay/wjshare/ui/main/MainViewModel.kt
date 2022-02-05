@@ -35,11 +35,12 @@ class MainViewModel @Inject constructor(
     private val sharedRepoList = mutableListOf<RepoModel>()
 
     init {
-        // 테스트 위함 토큰 지우기
-        authRepository.clear()
+        //authRepository.clear()
+        if (getAccessToken().isNotEmpty()) {
+            setLoginState(true)
+        }
     }
 
-    // 로그인 버튼 클릭
     fun onLoginButtonClick() = when (getLoginState()) {
         true -> {
             setLoginState(false)
@@ -48,15 +49,12 @@ class MainViewModel @Inject constructor(
         else -> requestLogin()
     }
 
-    // 바텀네비게이션 타입 클릭
     fun onBottomNavigationClick(screenType: ScreenType) {
         _bottomNaviType.value = screenType
     }
 
-    // 액세스 토큰 가져오기
     fun getAccessToken() = authRepository.accessToken
 
-    // 액세스 토큰 요청
     fun requestAccessToken(code: String) {
         authRepository.requestAccessToken(code)
             .observeOn(AndroidSchedulers.mainThread())
@@ -68,7 +66,6 @@ class MainViewModel @Inject constructor(
             }).addTo(compositeDisposable)
     }
 
-    // 좋아요 클릭한 레포지토리 저장
     fun saveSharedRepository(repoModel: RepoModel) {
         val repo = sharedRepoList.find { it.id == repoModel.id }
 
@@ -82,32 +79,25 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    // 좋아요 클릭된 레포지토리 리스트 반환
     fun getSharedRepositories() = sharedRepoList
 
-    // 바텀네비게이션 타입 반환
     private fun getBottomNaviType() = _bottomNaviType.value
 
-    // 로그인 상태 입력
     private fun setLoginState(state: Boolean) {
         _loginState.value = state
     }
 
-    // 로그인 상태 반환
     private fun getLoginState() = _loginState.value
 
-    // Uri Builder 가져와서 github callback 요청
     private fun requestLogin() {
         _loginUrl.value = Event(getUri())
     }
 
-    // 로그아웃 버튼
     private fun clearToken() {
         authRepository.clear()
         toProfileFragment()
     }
 
-    // 프로필 타입일 때 로그아웃 시 로그인 화면 띄워주기
     private fun toProfileFragment() {
         if (getBottomNaviType() == ScreenType.PROFILE) {
             onBottomNavigationClick(ScreenType.PROFILE)

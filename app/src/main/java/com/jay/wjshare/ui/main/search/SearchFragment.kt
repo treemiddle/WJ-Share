@@ -41,7 +41,7 @@ class SearchFragment :
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val copyRepo = intent?.extras?.getParcelable<RepoModel>(REPO_MODEL)
-            copyRepo?.let { viewModel.copyRepoOnNext(it) }
+            copyRepo?.let { viewModel.copyRepositoryOnNext(it) }
         }
     }
 
