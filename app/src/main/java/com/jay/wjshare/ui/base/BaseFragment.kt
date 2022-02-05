@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.jay.wjshare.ui.model.RepoModel
 
 abstract class BaseFragment<VDB : ViewDataBinding, VM : ViewModel>(
     @LayoutRes
@@ -40,5 +41,9 @@ abstract class BaseFragment<VDB : ViewDataBinding, VM : ViewModel>(
     abstract fun setupBinding()
 
     abstract fun setupObserving()
+
+    protected open fun actionByHasLiked(repo: RepoModel) {
+
+    }
 
 }

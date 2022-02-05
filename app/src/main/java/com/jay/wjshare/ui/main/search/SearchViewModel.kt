@@ -73,18 +73,23 @@ class SearchViewModel @Inject constructor(
                 .doOnNext { hideLoading() }
                 .subscribe { repos -> setRepositorys(repos) },
 
+            // 아이템 클릭 subject
             repoClickSubject.subscribe { setRepositorys(newSubmitList(it, getRepositorys())) },
 
+            // 리시버에서 넘어온 copy 아이템 subject
             copyRepoSubject.subscribe { updateRepository(it.applyClick(repoClickSubject)) }
         )
     }
 
+    // (좋아요 레포지토리를 만들기 위함) hasLiked 반대, clickSubject 등록
     override fun copyRepository(repo: RepoModel) =
         repo.copy(hasLiked = repo.hasLiked.not()).applyClick(repoClickSubject)
 
+    // 레포지토리 리스트에서 해당 레포지토리의 인덱스를 찾음
     override fun getCurrentRepositoryIndex(repo: RepoModel, list: List<RepoModel>) =
         list.indexOf(repo)
 
+    // 보여져있는 리스트 좋아요 클릭하면 해당 아이템 찾아서 좋아요 레포지토리 등록/해제 후 리스트 다시 그리기
     override fun newSubmitList(repo: RepoModel, oldList: List<RepoModel>?): List<RepoModel> {
         val newList = mutableListOf<RepoModel>().apply {
             addAll(oldList!!)
@@ -100,8 +105,10 @@ class SearchViewModel @Inject constructor(
         return newList
     }
 
+    // 리시버로 들어온 레포지토리 전달 용
     override fun copyRepoOnNext(newRepo: RepoModel) = copyRepoSubject.onNext(newRepo)
 
+    // 레포지토리 리스트에서 전달 받은 아이템을 id값으로 찾는다.(전달 받은 아이템임, hasliked 반대값으로 들어옴)
     override fun findRepository(newRepo: RepoModel, list: List<RepoModel>?): Boolean {
         list?.let {
             val repoModel = it.find { repo -> repo.id == newRepo.id }
@@ -111,6 +118,7 @@ class SearchViewModel @Inject constructor(
         } ?: return false
     }
 
+    // 리시버로 전달받은 아이템을 현재 리스트에서 찾아서 있는지 확인 후 setRepositorys로 그림?
     override fun updateRepository(newRepo: RepoModel) {
         if (findRepository(newRepo, getRepositorys())) {
             getRepositorys()?.let {
@@ -125,6 +133,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    // 페이징
     fun onLoadMore(page: Int) {
         gitHubRepository.getRepositories(
             query = querySubject.value!!,
@@ -148,26 +157,30 @@ class SearchViewModel @Inject constructor(
             }).addTo(compositeDisposable)
     }
 
+    // 키보드 입력
     fun debounceQuery(query: String) {
-        if (getAccessToken()) {
+        if (getAccessToken().isEmpty()) {
             setMessageState(MessageSet.EMPTY_TOKEN)
         } else {
             querySubject.onNext(query)
         }
     }
 
+    // 검색하기 버튼 클릭
     fun onSearchClick() {
-        if (getAccessToken()) {
+        if (getAccessToken().isEmpty()) {
             setMessageState(MessageSet.EMPTY_TOKEN)
         } else {
             searchClickSubject.onNext(Unit)
         }
     }
 
+    // 메인뷰모델에서 가져온 좋아요된 레포지토리를 저장
     fun setSharedList(list: List<RepoModel>) {
         _sharedList.value = list
     }
 
+    // 그리는 용도...(api나, 리스트를 다시 그릴 때...)
     private fun setRepositorys(list: List<RepoModel>) {
         val newList = mutableListOf<RepoModel>().apply { addAll(list) }
 
@@ -187,8 +200,10 @@ class SearchViewModel @Inject constructor(
         _repositories.value = newList
     }
 
+    // 현재 가지고 있는 레포지토리 리스트를 반환
     private fun getRepositorys() = _repositories.value
 
+    // 페이징 리스트 입력
     private fun setPagingRepositories(list: List<RepoModel>) {
         val newList = mutableListOf<RepoModel>().apply {
             addAll(getRepositorys()!!)
@@ -198,12 +213,15 @@ class SearchViewModel @Inject constructor(
         setRepositorys(newList)
     }
 
-    private fun getAccessToken() = authRepository.accessToken.isEmpty()
+    // 액세스 토큰 가져오기
+    private fun getAccessToken() = authRepository.accessToken
 
+    // 현재 state 상태 입력
     private fun setMessageState(state: MessageSet) {
         _searchState.value = Event(state)
     }
 
+    // 좋아요 클릭할 때 레포지토리 입력
     private fun setHasLikedRepository(repo: RepoModel) {
         _hasLikedRepo.value = repo
     }

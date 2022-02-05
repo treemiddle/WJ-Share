@@ -32,9 +32,9 @@ fun bindBottomNavigation(bottomNavi: BottomNavigationView, vm: MainViewModel?) {
 
         setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.search -> vm?.onBottomNavigationListener(ScreenType.SEARCH)
-                R.id.profile -> vm?.onBottomNavigationListener(ScreenType.PROFILE)
-                else -> vm?.onBottomNavigationListener(ScreenType.SEARCH)
+                R.id.search -> vm?.onBottomNavigationClick(ScreenType.SEARCH)
+                R.id.profile -> vm?.onBottomNavigationClick(ScreenType.PROFILE)
+                else -> vm?.onBottomNavigationClick(ScreenType.SEARCH)
             }
             true
         }

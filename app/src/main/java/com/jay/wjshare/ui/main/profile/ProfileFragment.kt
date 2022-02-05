@@ -3,9 +3,9 @@ package com.jay.wjshare.ui.main.profile
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.jay.wjshare.R
@@ -18,6 +18,8 @@ import com.jay.wjshare.ui.model.RepoModel
 import com.jay.wjshare.utils.ACTION_TO_PROFILE
 import com.jay.wjshare.utils.ACTION_TO_SEARCH
 import com.jay.wjshare.utils.REPO_MODEL
+import com.jay.wjshare.utils.ext.addReceiver
+import com.jay.wjshare.utils.ext.removeReceiver
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -42,13 +44,10 @@ class ProfileFragment
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        val filter = IntentFilter().apply { addAction(ACTION_TO_PROFILE) }
-        context.registerReceiver(receiver, filter)
-    }
-
-    override fun onDetach() {
-        context?.unregisterReceiver(receiver)
-        super.onDetach()
+        context.addReceiver(
+            receiver = receiver,
+            action = ACTION_TO_PROFILE
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,22 +61,36 @@ class ProfileFragment
     }
 
     override fun setupObserving() {
-        viewModel.hasLikedRepo.observe(viewLifecycleOwner, { repo ->
-            activityViewModel.setSharedRepositoryFromSearch(repo)
-            val intent = Intent().apply {
+        with(viewModel) {
+            hasLikedRepo.observe(viewLifecycleOwner, { repo ->
+                actionByHasLiked(repo)
+            })
+
+            setSharedList(activityViewModel.getSharedRepositories())
+            //initFirstSharedRepo(activityViewModel.getSharedRepositories())
+        }
+    }
+
+    override fun actionByHasLiked(repo: RepoModel) {
+        activityViewModel.saveSharedRepository(repo)
+        context?.sendBroadcast(
+            Intent().apply {
                 action = ACTION_TO_SEARCH
                 putExtra(REPO_MODEL, repo)
             }
-            context?.sendBroadcast(intent)
-        })
-        viewModel.initFirstSharedRepo(activityViewModel.getSharedRepositoryFromSearch())
+        )
+    }
+
+    override fun onDetach() {
+        context?.removeReceiver(receiver)
+        super.onDetach()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
 
-        if (!hidden && activityViewModel.getSharedRepositoryFromSearch().size != 0) {
-            viewModel.setSharedRepos(activityViewModel.getSharedRepositoryFromSearch())
+        if (!hidden && activityViewModel.getSharedRepositories().size != 0) {
+            viewModel.setSharedList(activityViewModel.getSharedRepositories())
         }
     }
 
