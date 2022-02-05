@@ -49,7 +49,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--        onLoadMore="@{(page) -> vm.onLoadMore(page)}"-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search_repo"
             onLoadMore="@{() -> vm.onLoadMore()}"
